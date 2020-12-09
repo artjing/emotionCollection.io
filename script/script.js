@@ -1,20 +1,36 @@
 const video = document.getElementById('video')
 
+// function startVideo() {
+//   navigator.mediaDevices.getUserMedia(
+//     { video: {} },
+//     stream => video.srcObject = stream,
+//     err => console.error(err)
+//   )
+// }
+
 function startVideo() {
-  navigator.getUserMedia(
-    { video: {} },
-    stream => video.srcObject = stream,
-    err => console.error(err)
-  )
+
+var constraints = {audio: false, video: true};
+
+function successCallback(stream) {
+  video.srcObject = stream;
+}
+
+function errorCallback(error) {
+  console.log("navigator.getUserMedia error: ", error);
+}
+
+navigator.mediaDevices.getUserMedia(constraints)
+  .then(successCallback)
+  .catch(errorCallback);
 }
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-  faceapi.nets.faceExpressionNet.loadFromUri('/models')
+  faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+  faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+  faceapi.nets.faceRecognitionNet.loadFromUri('models'),
+  faceapi.nets.faceExpressionNet.loadFromUri('models')
 ]).then(startVideo)
-
 
 
 video.addEventListener('play', () => {
